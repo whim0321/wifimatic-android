@@ -98,12 +98,25 @@ Copyright &#169; 2012, 2013 Carlos Prados\n\
         
     <!-- Wifi Actions preferences activity  -->
     <string name="category_actions_wifi">Actions with this Wi-Fi</string>
+
+    <string name="category_actions_arriving">Actions when arriving</string>
     <string name="preference_title_action_wifi_on">Auto activate</string>
     <string name="preference_summary_action_wifi_on">Activate Wi-Fi when arriving</string>
+    <string name="preference_title_action_wifi_add">Add new locations</string>
+    <string name="preference_summary_action_wifi_add">Remember new locations</string>
+    <string name="preference_title_action_arriving_ringer_mode">Ringer Mode</string>
+    <string name="preference_summary_action_arriving_ringer_mode">Change ringer mode when Wi-Fi on</string>
+    <string name="preference_ringer_mode_default">Not change</string>
+    <string name="preference_ringer_mode_normal">Normal</string>
+    <string name="preference_ringer_mode_silent">Silent</string>
+    <string name="preference_ringer_mode_vibrate">Vibrate</string>
+
+    <string name="category_actions_leaving">Actions when leaving</string>
     <string name="preference_title_action_wifi_off">Auto deactivate</string>
     <string name="preference_summary_action_wifi_off">Deactivate Wi-Fi when leaving</string>
-    <string name="preference_title_action_wifi_add">Add new locations</string>
-    <string name="preference_summary_action_wifi_add">Remember new locations</string>    
+    <string name="preference_title_action_leaving_ringer_mode">Ringer Mode</string>
+    <string name="preference_summary_action_leaving_ringer_mode">Change ringer mode when leaving</string>
+
     <string name="category_title_cells">Locations remembered</string>
     <string name="preference_title_cell_description">Cell tower: %1$d-%2$d</string>
     <string name="preference_summary_cell_description">GSM/WCDMA/CDMA cell tower id</string>

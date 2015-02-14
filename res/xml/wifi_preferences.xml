@@ -2,38 +2,61 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory
-        android:key="category_actions_wifi_"
-        android:title="@string/category_actions_wifi" >
+        android:key="category_actions_arriving_"
+        android:title="@string/category_actions_arriving">
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="preference_action_wifi_ON_"
             android:persistent="false"
             android:summary="@string/preference_summary_action_wifi_on"
-            android:title="@string/preference_title_action_wifi_on" 
-            >
+            android:title="@string/preference_title_action_wifi_on">
         </CheckBoxPreference>
-        
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="preference_action_wifi_OFF_"
+
+        <ListPreference
+            android:defaultValue="@string/preference_ringer_mode_default"
+            android:entries="@array/preference_ringer_mode"
+            android:entryValues="@array/preference_ringer_mode"
+            android:key="preference_action_arriving_ringer_mode_"
             android:persistent="false"
-            android:summary="@string/preference_summary_action_wifi_off"
-            android:title="@string/preference_title_action_wifi_off" 
-            >
-        </CheckBoxPreference>
-        
+            android:summary="@string/preference_summary_action_arriving_ringer_mode"
+            android:title="@string/preference_title_action_arriving_ringer_mode">
+        </ListPreference>
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="preference_action_wifi_ADD_"
             android:persistent="false"
             android:summary="@string/preference_summary_action_wifi_add"
-            android:title="@string/preference_title_action_wifi_add" 
-            >
+            android:title="@string/preference_title_action_wifi_add">
         </CheckBoxPreference>
-    
+
     </PreferenceCategory>
-    
+
+    <PreferenceCategory
+        android:key="category_actions_leaving_"
+        android:title="@string/category_actions_leaving">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="preference_action_wifi_OFF_"
+            android:persistent="false"
+            android:summary="@string/preference_summary_action_wifi_off"
+            android:title="@string/preference_title_action_wifi_off">
+        </CheckBoxPreference>
+
+        <ListPreference
+            android:defaultValue="Not change"
+            android:entries="@array/preference_ringer_mode"
+            android:entryValues="@array/preference_ringer_mode"
+            android:key="preference_action_leaving_ringer_mode_"
+            android:persistent="false"
+            android:summary="@string/preference_summary_action_leaving_ringer_mode"
+            android:title="@string/preference_title_action_leaving_ringer_mode">
+        </ListPreference>
+
+    </PreferenceCategory>
+
     <PreferenceCategory
         android:key="category_cells_"
         android:title="@string/category_title_cells" />
