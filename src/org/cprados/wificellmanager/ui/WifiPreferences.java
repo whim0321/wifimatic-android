@@ -18,7 +18,9 @@
 
 package org.cprados.wificellmanager.ui;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.cprados.wificellmanager.DataManager;
@@ -36,11 +38,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -75,7 +79,7 @@ public class WifiPreferences extends PreferenceActivity implements OnPreferenceC
     public static String EXTRA_ACTIVITY_WIFI_NAME = WifiPreferences.class.getName() + ".activity_wifi_name";
     
     /** Ordinal of the first wifi-cell preference on this activity */
-    private static final int FIRST_WIFI_CELL_PREFERENCE = 5;
+    private static final int FIRST_WIFI_CELL_PREFERENCE = 8;
     
     /** Action to be sent in a broadcast to ask this activity to refresh */
     private static final String REFRESH_UI_ACTION = WifiPreferences.class.getPackage().getName() + ".refresh_ui";
@@ -474,37 +478,54 @@ public class WifiPreferences extends PreferenceActivity implements OnPreferenceC
     private void setPreferencesWifiName (PreferenceScreen screen, String wifiName) {
 
         // Retrieve all the statically added categories
-        PreferenceCategory catActions = (PreferenceCategory) screen.findPreference(DataManager.CATEGORY_ACTIONS_WIFI);        
-        PreferenceCategory catCells = (PreferenceCategory) screen.findPreference(DataManager.CATEGORY_CELL);        
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        PreferenceCategory catArriving = (PreferenceCategory) screen.findPreference(DataManager.CATEGORY_ACTIONS_ARRIVING);
+        PreferenceCategory catLeaving = (PreferenceCategory) screen.findPreference(DataManager.CATEGORY_ACTIONS_LEAVING);
+        PreferenceCategory catCells = (PreferenceCategory) screen.findPreference(DataManager.CATEGORY_CELL);
+
+        List<PreferenceCategory> catList = new ArrayList<PreferenceCategory>();
+        if (catArriving != null && catLeaving != null) {
+            catList.add(catArriving);
+            catList.add(catLeaving);
+        }
 
         // Update categories key
         if (catCells != null) {
             catCells.setKey(catCells.getKey() + wifiName);
         }
-        
-        if (catActions != null) {
-            catActions.setKey(catActions.getKey() + wifiName);
 
-            // Retrieve all statically added preferences            
-            int numPref = catActions.getPreferenceCount();
-            for (int i = 0; i < numPref; i++) {
+        for (int i = 0; i < catList.size(); i++) {
+            PreferenceCategory prefCat = catList.get(i);
+            prefCat.setKey(prefCat.getKey() + wifiName);
+
+            // Retrieve all statically added preferences
+            int numPref = prefCat.getPreferenceCount();
+            for (int j = 0; j < numPref; j++) {
 
                 // Rename preference key
-                Preference preference = catActions.getPreference(i);
+                Preference preference = prefCat.getPreference(j);
                 preference.setKey(preference.getKey() + wifiName);
                 preference.setPersistent(true);
 
                 if (preference instanceof CheckBoxPreference) {
-                    
+
                     // Reset initial value
-                    boolean value = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(preference.getKey(), true);
+                    boolean value = sharedPref.getBoolean(preference.getKey(), true);
                     ((CheckBoxPreference) preference).setChecked(value);
 
                     // Set change listener
                     preference.setOnPreferenceChangeListener(this);
                 }
+                else if (preference instanceof ListPreference) {
+                    // Reset initial value
+                    String ringMode = sharedPref.getString(preference.getKey(), getResources().getString(R.string.preference_ringer_mode_default));
+                    ((ListPreference) preference).setValue(ringMode);
+
+                    // Set change listener
+                    preference.setOnPreferenceChangeListener(this);
+                }
             }
-        }        
+        }
     }
     
     /** Removes all wifi-cell preferences UI objects that are selected by user */
