@@ -43,6 +43,7 @@ import android.app.AlarmManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Bundle;
@@ -343,8 +344,8 @@ public class ManagerService extends Service {
         
     /** Performs an action of the plan */
     private boolean performAction(StateAction action, RequestedAction requestedAction, Date date) {
-        boolean result = false;        
-        
+        boolean result = false;
+
         // Performs required action
         switch (action) {
 
@@ -424,7 +425,24 @@ public class ManagerService extends Service {
             MobileDataManager.setMobileDataState(getApplicationContext(), action, mStateData);            
             result = true;
             break;
-        
+
+        // Handles ringer mode set action
+        case RINGER_SET:
+            int ringerMode = DataManager.getRingerMode(this, mStateData);
+            AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+            StateEvent cellState = CellStateManager.getCellState(this, null, mStateData);
+
+            // Set ringer mode
+            if (ringerMode != -1) {
+                audioManager.setRingerMode(ringerMode);
+            }
+            // Clear ringer wifi extra
+            if (cellState == StateEvent.OUT) {
+                WifiStateManager.setExtraRingerWifi(mStateData, null);
+            }
+            result = true;
+            break;
+
         default:
         	break;
         }        
