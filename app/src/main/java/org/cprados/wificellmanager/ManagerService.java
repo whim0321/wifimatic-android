@@ -428,17 +428,18 @@ public class ManagerService extends Service {
 
         // Handles ringer mode set action
         case RINGER_SET:
-            int ringerMode = DataManager.getRingerMode(this, mStateData);
+            int ringerMode = DataManager.getRingerMode(this, mStateData, mStateMachine);
             AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-            StateEvent cellState = CellStateManager.getCellState(this, null, mStateData);
 
             // Set ringer mode
             if (ringerMode != -1) {
                 audioManager.setRingerMode(ringerMode);
-            }
-            // Clear ringer wifi extra
-            if (cellState == StateEvent.OUT) {
-                WifiStateManager.setExtraRingerWifi(mStateData, null);
+
+                // Clear ringer wifi extra
+                StateEvent cellState = mStateMachine.getCurrentState().getCellState();
+                if (cellState == StateEvent.OUT) {
+                    WifiStateManager.setExtraRingerWifi(mStateData, null);
+                }
             }
             result = true;
             break;
