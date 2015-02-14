@@ -179,7 +179,7 @@ public class StateMachine {
 
     /** Possible actions to be fired after an state change */
     public enum StateAction implements DescribeableElement {
-        NONE, ADD, ON, OFF, CREATE_DEFERRED_OFF, CANCEL_DEFERRED_OFF, DATA_OFF, DATA_RESTORE;
+        NONE, ADD, ON, OFF, CREATE_DEFERRED_OFF, CANCEL_DEFERRED_OFF, DATA_OFF, DATA_RESTORE, RINGER_SET;
         
         /** Returns action description */
         @Override
@@ -273,9 +273,11 @@ public class StateMachine {
         case IN_DISC:
             if (stateEvent == StateEvent.OUT) {
                 nextActions.add(StateAction.OFF);
+                nextActions.add(StateAction.RINGER_SET);
             }
             else if (stateEvent == StateEvent.CON) {
-                nextActions.add(StateAction.ADD);                
+                nextActions.add(StateAction.ADD);
+                nextActions.add(StateAction.RINGER_SET);
             }
             break;
 
@@ -283,8 +285,12 @@ public class StateMachine {
             if (stateEvent == StateEvent.INIT) {
                 nextActions.add(StateAction.ON);
             }
+            else if (stateEvent == StateEvent.OUT) {
+                nextActions.add(StateAction.RINGER_SET);
+            }
             else if (stateEvent == StateEvent.CON) {
                 nextActions.add(StateAction.ADD);
+                nextActions.add(StateAction.RINGER_SET);
             }
             break;
 
@@ -325,6 +331,7 @@ public class StateMachine {
         case UNK_DISC:
             if (stateEvent == StateEvent.OUT){
                 nextActions.add(StateAction.OFF);
+                nextActions.add(StateAction.RINGER_SET);
             }
             break;
 
@@ -335,6 +342,9 @@ public class StateMachine {
             else if (stateEvent == StateEvent.INIT) {
                 // v1.3.4: Action later filtered out if unk location activates preference is not set 
                 nextActions.add(StateAction.ON);                
+            }
+            else if (stateEvent == StateEvent.OUT) {
+                nextActions.add(StateAction.RINGER_SET);
             }
             break;
         }
