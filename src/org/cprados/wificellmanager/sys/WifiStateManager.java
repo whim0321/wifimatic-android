@@ -47,8 +47,11 @@ public class WifiStateManager {
     
     /** Extra name for the current Wifi name: either current SSID or BSSSID */    
     private static final String EXTRA_CURRENT_WIFI = WifiStateManager.class.getName() + ".current_wifi";
-    
-    /** Extra name for target wifi state if there is a change in progress */    
+
+    /** Extra name for the Wifi name related to ringer mode */
+    private static final String EXTRA_RINGER_WIFI = WifiStateManager.class.getName() + ".ringer_wifi";
+
+    /** Extra name for target wifi state if there is a change in progress */
     private static final String EXTRA_TARGET_WIFI_STATE = WifiStateManager.class.getName() + ".target_wifi_state";    
 
     /** Extra name for initial wifi state if there is a change in progress */    
@@ -146,8 +149,13 @@ public class WifiStateManager {
             }
         }
                 
-        // Updates current wifi and Ap Mode extras
-        setCurrentWifi (stateData, (result == StateEvent.CON) ? ssid : null);
+        // Updates current wifi Ap Mode and Ringer wifi extras
+        if (result == StateEvent.CON) {
+            setCurrentWifi(stateData, ssid);
+            setExtraRingerWifi(stateData, ssid);
+        } else {
+            setCurrentWifi(stateData, null);
+        }
         
         return result;
     }
@@ -160,7 +168,7 @@ public class WifiStateManager {
         Bundle currentData = new Bundle();
         StateEvent currentWifiState = getWifiState(context, null, currentData);
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        
+
         if ((wifiManager != null) && (currentWifiState !=  targetWifiState)) {
 
         	boolean inflightWifiStateChange = false;
@@ -178,7 +186,7 @@ public class WifiStateManager {
             if (currentWifiState == StateEvent.OFF) {
                 if(BuildConfig.DEBUG) {
                     Log.d(LOGTAG, "WifiStateManager: enabling wifi");
-                }                                
+                }
                 wifiManager.setWifiEnabled(true);
                 inflightWifiStateChange = true;
             }
@@ -362,4 +370,16 @@ public class WifiStateManager {
     	}
     }
 
+    /** Returns ringer wifi extra information from stateData bundle */
+    public static String getExtraRingerWifi (Bundle stateData) {
+        String wifi = (stateData != null) ? stateData.getString(EXTRA_RINGER_WIFI) : null;
+        return wifi;
+    }
+
+    /** Sets ringer wifi extra information to stateData bundle */
+    public static void setExtraRingerWifi (Bundle stateData, String wifi) {
+        if (stateData != null) {
+            stateData.putString(EXTRA_RINGER_WIFI, wifi);
+        }
+    }
 }
