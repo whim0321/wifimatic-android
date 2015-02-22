@@ -26,7 +26,6 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.cprados.wificellmanager.StateMachine.StateEvent;
-import org.cprados.wificellmanager.sys.CellStateManager;
 import org.cprados.wificellmanager.sys.WifiStateManager;
 
 import android.content.Context;
@@ -1118,13 +1117,13 @@ public class DataManager {
     }
 
     /** Returns Ringer Mode preference */
-    public static int getRingerMode(Context context, Bundle stateData) {
+    public static int getRingerMode(Context context, Bundle stateData, StateMachine stateMachine) {
 
         int result = -1;
         String mode = null;
         String wifi = WifiStateManager.getExtraRingerWifi(stateData);
-        StateEvent wifiState = WifiStateManager.getWifiState(context, null, stateData);
-        StateEvent cellState = CellStateManager.getCellState(context, null, stateData);
+        StateEvent wifiState = stateMachine.getCurrentState().getWifiState();
+        StateEvent cellState = stateMachine.getCurrentState().getCellState();
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (wifiState == StateEvent.CON) {
