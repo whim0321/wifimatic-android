@@ -430,16 +430,16 @@ public class ManagerService extends Service {
         case RINGER_SET:
             int ringerMode = DataManager.getRingerMode(this, mStateData, mStateMachine);
             AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+            StateEvent cellState = mStateMachine.getCurrentState().getCellState();
 
             // Set ringer mode
             if (ringerMode != -1) {
                 audioManager.setRingerMode(ringerMode);
+            }
 
-                // Clear ringer wifi extra
-                StateEvent cellState = mStateMachine.getCurrentState().getCellState();
-                if (cellState == StateEvent.OUT) {
-                    WifiStateManager.setExtraRingerWifi(mStateData, null);
-                }
+            // Clear ringer wifi extra
+            if (cellState == StateEvent.OUT) {
+                WifiStateManager.setExtraRingerWifi(mStateData, null);
             }
             result = true;
             break;

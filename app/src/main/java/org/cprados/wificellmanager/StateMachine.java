@@ -303,6 +303,7 @@ public class StateMachine {
         case OUT_DISC:
             if (stateEvent == StateEvent.INIT) {
                 nextActions.add(StateAction.OFF);
+                nextActions.add(StateAction.RINGER_SET);
             }
             else if (stateEvent == StateEvent.CON) {
                 nextActions.add(StateAction.ADD);
